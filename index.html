@@ -187,8 +187,8 @@
             const loader = new OBJLoader();
             loader.load('./cube.obj', // Path to your FBX file
                 function (object) {
-                    object.scale.set(0.5, 0.5, 0.5); // Larger size  // Scale the model down if it's too large
-                    object.position.set(0, 0, -2); // Position in front of the camera
+                    object.scale.set(0.1, 0.1, 0.1); // Larger size  // Scale the model down if it's too large
+                    object.position.set(0, 0, -1); // Position in front of the camera
                     scene.add(object);
                 },
                 function (xhr) {
