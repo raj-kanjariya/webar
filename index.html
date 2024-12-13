@@ -124,18 +124,23 @@
 		</script>
 	</body>
 </html> -->
+
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>three.js ar - custom model</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link type="text/css" rel="stylesheet" href="main.css">
 </head>
+
 <body>
 
     <div id="info">
-        <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> ar - custom model<br/>(Chrome Android 81+)
+        <a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> ar - custom model<br />(Chrome Android
+        81+)
     </div>
 
     <script type="importmap">
@@ -152,7 +157,8 @@
         import * as THREE from './three.module.min.js';
         import { ARButton } from './ARButton.js';
         // import { FBXLoader } from './FBXLoader.js';
-        import {OBJLoader} from './OBJLoader.js';
+        import { OBJLoader } from './OBJLoader.js';
+        import { MTLLoader } from './MTLLoader.js';
 
         let camera, scene, renderer;
 
@@ -182,22 +188,45 @@
             // Add AR button
             document.body.appendChild(ARButton.createButton(renderer));
 
-            
-            // Load custom FBX model
-            const loader = new OBJLoader();
-            loader.load('./sofa.obj', // Path to your FBX file
-                function (object) {
-                    object.scale.set(0.1, 0.1, 0.1); // Larger size  // Scale the model down if it's too large
-                    object.position.set(0, 0, -1); // Position in front of the camera
+
+
+            // // Load custom OBJ model
+            // const loader = new OBJLoader();
+            // loader.load('./sofa.obj', // Path to your OBJ file
+            //     function (object) {
+            //         object.scale.set(0.1, 0.1, 0.1); // Larger size  // Scale the model down if it's too large
+            //         object.position.set(0, 0, -1); // Position in front of the camera
+            //         scene.add(object);
+            //     },
+            //     function (xhr) {
+            //         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+            //     },
+            //     function (error) {
+            //         console.error('An error occurred while loading the model:', error);
+            //     }
+            // );
+
+
+
+
+
+            // Load materials first
+            const mtlLoader = new MTLLoader();
+            mtlLoader.load('./sofa.mtl', (materials) => {
+                materials.preload(); // Preload materials
+                const objLoader = new OBJLoader();
+                objLoader.setMaterials(materials); // Associate materials with OBJLoader
+
+                // Load the OBJ file
+                objLoader.load('./sofa.obj', (object) => {
+                    object.scale.set(0.1, 0.1, 0.1);
+                    object.position.set(0, 0, -1);
                     scene.add(object);
-                },
-                function (xhr) {
-                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                },
-                function (error) {
-                    console.error('An error occurred while loading the model:', error);
-                }
-            );
+                }, undefined, (error) => {
+                    console.error('An error occurred while loading the OBJ model:', error);
+                });
+            });
+
 
             // Adjust on window resize
             window.addEventListener('resize', onWindowResize);
@@ -220,4 +249,5 @@
 
     </script>
 </body>
+
 </html>
